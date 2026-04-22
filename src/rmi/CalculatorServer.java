@@ -1,6 +1,7 @@
 package rmi;
 
 
+import java.io.ObjectInputFilter;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -15,7 +16,13 @@ public class CalculatorServer {
             // ÉTAPE A — Créer l'implémentation
             CalculatorImpl impl = new CalculatorImpl();
 
+            UnicastRemoteObject.exportObject( impl, 4567);
+
             // ÉTAPE B — Démarrer le RMI Registry dans ce process
+            ObjectInputFilter filter = ObjectInputFilter.Config
+                    .createFilter(
+                            "rmi.*;java.lang.*;java.util.*;!*"
+                    );
             Registry registry = LocateRegistry.createRegistry(PORT);
 
             // ÉTAPE C — Publier l'objet sous un nom

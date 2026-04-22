@@ -1,5 +1,6 @@
 package rmi;
 
+import java.io.ObjectInputFilter;
 import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -15,6 +16,10 @@ public class CalculatorClient {
 
         try {
             // ÉTAPE A — Localiser le Registry distant
+            ObjectInputFilter filter = ObjectInputFilter.Config
+                    .createFilter(
+                            "rmi.*;java.lang.*;java.util.*;!*"
+                    );
             Registry registry = LocateRegistry.getRegistry(host, port);
 
             // ÉTAPE B — Récupérer le stub (proxy distant)
@@ -48,7 +53,7 @@ public class CalculatorClient {
             }
 
         } catch (ConnectException e) {
-            System.out.println("Serveur inaccessible sur host:port");
+            System.out.println("Serveur inaccessible sur "+host+":"+port);
         } catch (NotBoundException e) {
             System.out.println("'Calculator' non enregistré dans le registry");
         } catch (RemoteException e) {
